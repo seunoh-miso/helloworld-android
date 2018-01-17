@@ -11,10 +11,21 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        try {
+            buildConfigField "String", "HELLO", project.property("HELLO")
+        } catch (MissingPropertyException e) {
+            println("MissingPropertyException " + e.message)
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+            jniDebuggable true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -24,10 +35,22 @@ android {
             path 'src/main/cpp/CMakeLists.txt'
         }
     }
+
+    applicationVariants.all { variant ->
+        if ("release" == variant.buildType.name) {
+            variant.outputs.all {
+                def versionName = variant.versionName
+                def date = new Date()
+                def formattedDate = date.format('yyyyMMddHHmmss')
+                def newName = "app-release" + "_" + versionName + "_" + formattedDate
+                outputFileName = newName + ".apk"
+            }
+        }
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.0.2'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'

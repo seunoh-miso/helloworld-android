@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        textView.text = "Hello World! Kotlin in native!"
+        textView.text = "${BuildConfig.HELLO}-World! Kotlin in native!"
         val random = Random()
         val bgColor = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256))
         view.setBackgroundColor(bgColor)
@@ -32,6 +32,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        textView.text = "NDK: ${NativeUtil.stringFromJNI()}"
+        textView.text = "${BuildConfig.HELLO}-NDK: ${NativeUtil.stringFromJNI()}"
     }
 }
